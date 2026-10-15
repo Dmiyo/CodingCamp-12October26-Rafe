@@ -6,6 +6,61 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <div class="dashboard">
+        <!-- 1. Area Greeting -->
+        <div class="card greeting-card">
+            <div class="clock-time" id="clock">10:45:22</div>
+            <div class="clock-date" id="date">Tuesday, January 27, 2026</div>
+            <div class="greeting-text" id="greeting">Good Morning</div>
+        </div>
+
+        <!-- 2. Focus Timer -->
+        <div class="card timer-card">
+            <h2 class="card-title">Focus Timer</h2>
+            <div class="timer-display" id="timer">25:00</div>
+            <div class="timer-controls">
+                <button class="btn btn-primary" id="btn-start">Start</button>
+                <button class="btn btn-secondary" id="btn-stop">Stop</button>
+                <button class="btn btn-secondary" id="btn-reset">Reset</button>
+            </div>
+        </div>
+
+        <!-- 3. Tasks (To-Do List) -->
+        <div class="card tasks-card">
+            <h2 class="card-title">Tasks</h2>
+            <div class="task-input-group">
+                <input type="text" id="task-input" placeholder="Add a new task...">
+                <button class="btn btn-primary" id="btn-add-task">Add</button>
+            </div>
+            <ul class="task-list" id="task-list">
+                <!-- Contoh item statis -->
+                <li class="task-item">
+                    <label><input type="checkbox"> belanja</label>
+                    <button class="btn btn-delete">Delete</button>
+                </li>
+                <li class="task-item">
+                    <label><input type="checkbox"> belajar</label>
+                    <button class="btn btn-delete">Delete</button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 4. Quick Links -->
+        <div class="card links-card">
+            <h2 class="card-title" style="text-align: left;">Quick Links</h2>
+            <div class="link-input-group">
+                <input type="text" id="link-name" placeholder="Link name">
+                <input type="url" id="link-url" placeholder="URL">
+                <button class="btn btn-primary" id="btn-add-link">Add Link</button>
+            </div>
+            <div class="quick-links-list" id="quick-links-list">
+                <!-- Contoh link statis -->
+                <a href="#" class="link-chip">🌐 Google</a>
+                <a href="#" class="link-chip">✉️ Gmail</a>
+                <a href="#" class="link-chip">📅 Calendar</a>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
