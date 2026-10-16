@@ -2,124 +2,185 @@
    1. KONFIGURASI TEMA (LIGHT MODE DEFAULT)
    ========================================= */
 :root {
-    /* Warna Background Utama (Bisa gradasi atau warna solid) */
-    --bg-color: #f0f2f5;
+    /* Background Utama (Solid, akan ditimpa oleh blob) */
+    --bg-color: #e0e5ec;
     
     /* Efek Kaca (Glassmorphism) */
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.5);
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.45); /* Transparansi diturunkan */
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
     
     /* Warna Teks */
-    --text-main: #1a1a1a; 
-    --text-muted: #666666;
+    --text-main: #1a1a1a;
+    --text-muted: #555555;
     
     /* Warna Aksen & Tombol */
     --accent-color: #6e8efb;
     --accent-hover: #5a7ae0;
-    --btn-secondary-bg: rgba(0, 0, 0, 0.05);
-    --btn-secondary-hover: rgba(0, 0, 0, 0.1);
+    --btn-secondary-bg: rgba(255, 255, 255, 0.5);
+    --btn-secondary-hover: rgba(255, 255, 255, 0.8);
     --btn-delete-bg: #f28b82;
     
     /* Input Form */
-    --input-bg: rgba(255, 255, 255, 0.8);
-    --input-border: rgba(0, 0, 0, 0.1);
-
+    --input-bg: rgba(255, 255, 255, 0.6);
+    --input-border: rgba(255, 255, 255, 0.8);
+    
     /* Warna Toggle */
-    --toggle-bg: #ccc;
-    --toggle-ball: #fff;
-
+    --toggle-bg: #cccccc;
+    --toggle-ball: #ffffff;
 }
 
 /* =========================================
-   2. DARK MODE (Otomatis mengikuti sistem)
+   2. DARK MODE (Dikontrol oleh Checkbox)
    ========================================= */
-/* Ketika checkbox dengan id theme-toggle dicentang, ubah variabelnya */
-#theme-toggle:checked ~ .dashboard,
-#theme-toggle:checked ~ * { 
-    /* Catatan: Kita menggunakan trik sibling selector. 
-       Karena checkbox ada di luar .dashboard, kita bisa langsung menimpa :root */
-}
-
-/* Cara paling bersih: Menggunakan :has() pada body (Didukung browser modern) */
 body:has(#theme-toggle:checked) {
-    --bg-color: #121212;
-    --glass-bg: rgba(30, 30, 30, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-    --text-main: #f5f5f5;
+    --bg-color: #0f0f13;
+    
+    /* Efek Kaca di Dark Mode */
+    --glass-bg: rgba(25, 25, 35, 0.5);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+    
+    /* Warna Teks */
+    --text-main: #f0f0f0;
     --text-muted: #aaaaaa;
+    
+    /* Tombol */
     --btn-secondary-bg: rgba(255, 255, 255, 0.1);
     --btn-secondary-hover: rgba(255, 255, 255, 0.2);
+    
+    /* Input Form */
     --input-bg: rgba(0, 0, 0, 0.3);
-    --input-border: rgba(255, 255, 255, 0.15);
+    --input-border: rgba(255, 255, 255, 0.1);
+    
+    /* Toggle */
     --toggle-bg: #6e8efb;
-    --toggle-ball: #121212;
+    --toggle-ball: #1a1a1a;
 }
 
 /* =========================================
-   3. RESET & GLOBAL STYLES
+   3. RESET & GLOBAL STYLES (FIXED VIEWPORT)
    ========================================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+html, body {
+    /* Kunci agar tidak bisa di-scroll */
+    height: 100%;
+    overflow: hidden; 
 }
 
 body {
     background-color: var(--bg-color);
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 2vh 2vw; /* Padding berbasis viewport */
     color: var(--text-main);
-    
-    /* Opsional: Menambahkan sedikit pola gradasi di background */
-    background-image: radial-gradient(circle at 10% 20%, rgba(110, 142, 251, 0.15) 0%, transparent 40%),
-                      radial-gradient(circle at 90% 80%, rgba(167, 119, 227, 0.15) 0%, transparent 40%);
+    position: relative;
 }
 
 /* =========================================
-   4. LAYOUT DASHBOARD
+   4. DEKORASI BACKGROUND (BLOB EFFECT)
+   ========================================= */
+.bg-blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.6;
+    transition: opacity 0.4s ease;
+}
+
+.blob-1 { width: 40vw; height: 40vw; background: #6e8efb; top: -10vh; left: -10vw; }
+.blob-2 { width: 35vw; height: 35vw; background: #a777e3; bottom: -10vh; right: -5vw; }
+.blob-3 { width: 30vw; height: 30vw; background: #ff9a9e; top: 40%; left: 50%; transform: translate(-50%, -50%); }
+
+body:has(#theme-toggle:checked) .bg-blob { opacity: 0.25; }
+
+/* =========================================
+   5. LAYOUT DASHBOARD (FIXED & GRID)
    ========================================= */
 .dashboard {
     display: grid;
+    /* Grid layout: 2 kolom utama */
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    /* Baris: Header, Greeting, Konten Bawah */
+    grid-template-rows: auto auto 1fr; 
+    gap: 1.5vh 1.5vw;
+    
+    /* Ukuran Fixed ke Viewport */
     width: 100%;
-    max-width: 900px;
+    max-width: 1400px; /* Batas maksimal di monitor ultrawide */
+    height: 100%;
+    max-height: 900px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Header Dashboard */
+.dashboard-header {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5vw;
+}
+
+.dashboard-title {
+    font-size: clamp(1.2rem, 2vw, 1.8rem); /* Font fluid */
+    font-weight: 600;
+    color: var(--text-main);
 }
 
 /* =========================================
-   5. GLASSMORPHISM CARD STYLES
+   6. GLASSMORPHISM CARD STYLES (FIXED)
    ========================================= */
 .card {
-    padding: 24px;
+    padding: clamp(1rem, 2vh, 2rem); /* Padding fluid */
     border-radius: 16px;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Kelas khusus untuk efek kaca */
-.glass-panel {
+    /* Kunci tinggi agar tidak meluber */
+    overflow: hidden; 
+    
     background: var(--glass-bg);
-    backdrop-filter: blur(12px); /* Efek blur utama */
-    -webkit-backdrop-filter: blur(12px); /* Untuk Safari */
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
+    
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.4s ease;
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+}
+
+/* Area yang bisa di-scroll di dalam card */
+.scrollable-area {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 5px; /* Ruang untuk scrollbar */
+    margin-right: -5px;
+}
+
+/* Scrollbar Styling (Elegan) */
+.scrollable-area::-webkit-scrollbar { width: 4px; }
+.scrollable-area::-webkit-scrollbar-track { background: transparent; }
+.scrollable-area::-webkit-scrollbar-thumb { 
+    background: var(--glass-border); 
+    border-radius: 4px; 
 }
 
 /* =========================================
-   6. KOMPONEN DALAM CARD
+   7. KOMPONEN DALAM CARD (FLUID TYPOGRAPHY)
    ========================================= */
 
 /* --- Greeting Area --- */
@@ -127,34 +188,38 @@ body {
     grid-column: 1 / -1;
     align-items: center;
     text-align: center;
+    justify-content: center;
 }
 
 .clock-time {
-    font-size: 3.5rem;
+    /* Font fluid: min 2rem, ideal 6vw, max 4.5rem */
+    font-size: clamp(2rem, 6vw, 4.5rem);
     font-weight: 300;
     color: var(--accent-color);
-    margin-bottom: 8px;
+    margin-bottom: 0.5vh;
+    line-height: 1;
 }
 
 .clock-date {
-    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 1.2vw, 1rem);
     color: var(--text-muted);
-    margin-bottom: 12px;
+    margin-bottom: 1vh;
 }
 
 .greeting-text {
-    font-size: 1.4rem;
+    font-size: clamp(1rem, 2vw, 1.6rem);
     font-weight: 600;
     color: var(--text-main);
 }
 
 /* --- Titles --- */
 .card-title {
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
     font-weight: 600;
-    margin-bottom: 16px;
+    margin-bottom: 1.5vh;
     text-align: center;
     color: var(--text-main);
+    flex-shrink: 0; /* Jangan mengecil */
 }
 
 /* --- Focus Timer --- */
@@ -164,55 +229,50 @@ body {
 }
 
 .timer-display {
-    font-size: 3.5rem;
+    font-size: clamp(2.5rem, 7vw, 5rem);
     font-weight: 300;
     color: var(--accent-color);
-    margin-bottom: 20px;
+    margin-bottom: 2vh;
+    line-height: 1;
 }
 
 .timer-controls {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* --- Tombol (Buttons) --- */
 .btn {
-    padding: 8px 16px;
+    padding: clamp(6px, 1vh, 10px) clamp(12px, 2vw, 20px);
     border: none;
     border-radius: 8px;
-    font-size: 0.85rem;
+    font-size: clamp(0.7rem, 1vw, 0.9rem);
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.btn-primary {
-    background-color: var(--accent-color);
-    color: #ffffff;
-}
-.btn-primary:hover { 
-    background-color: var(--accent-hover); 
-    transform: scale(1.02);
-}
+.btn-primary { background-color: var(--accent-color); color: #ffffff; }
+.btn-primary:hover { background-color: var(--accent-hover); transform: scale(1.05); }
 
 .btn-secondary {
     background-color: var(--btn-secondary-bg);
     color: var(--text-main);
+    border: 1px solid var(--glass-border);
 }
-.btn-secondary:hover { 
-    background-color: var(--btn-secondary-hover); 
-}
+.btn-secondary:hover { background-color: var(--btn-secondary-hover); }
 
 .btn-delete {
     background-color: var(--btn-delete-bg);
     color: #ffffff;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     padding: 4px 10px;
     border-radius: 6px;
+    border: none;
 }
-.btn-delete:hover { 
-    opacity: 0.8; 
-}
+.btn-delete:hover { opacity: 0.8; }
 
 /* --- Tasks (To-Do List) --- */
 .tasks-card {
@@ -222,29 +282,31 @@ body {
 .task-input-group {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 1.5vh;
+    flex-shrink: 0;
 }
 
 .task-input-group input {
     flex-grow: 1;
-    padding: 10px 14px;
+    padding: clamp(8px, 1vh, 12px) clamp(10px, 1vw, 16px);
     border: 1px solid var(--input-border);
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
     outline: none;
     background-color: var(--input-bg);
     color: var(--text-main);
+    backdrop-filter: blur(4px);
+    min-width: 0; /* Mencegah overflow di flexbox */
 }
 
-.task-input-group input:focus {
-    border-color: var(--accent-color);
-}
+.task-input-group input:focus { border-color: var(--accent-color); }
+.task-input-group input::placeholder { color: var(--text-muted); }
 
 .task-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .task-item {
@@ -253,15 +315,16 @@ body {
     align-items: center;
     padding: 8px 0;
     border-bottom: 1px solid var(--input-border);
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
 }
 
 .task-item label {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.95rem;
     cursor: pointer;
     color: var(--text-main);
+    word-break: break-word;
 }
 
 .task-item input[type="checkbox"] {
@@ -269,6 +332,7 @@ body {
     height: 16px;
     cursor: pointer;
     accent-color: var(--accent-color);
+    flex-shrink: 0;
 }
 
 /* --- Quick Links --- */
@@ -279,43 +343,48 @@ body {
 .link-input-group {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 1.5vh;
+    flex-shrink: 0;
 }
 
 .link-input-group input {
-    padding: 10px 14px;
+    padding: clamp(8px, 1vh, 12px) clamp(10px, 1vw, 16px);
     border: 1px solid var(--input-border);
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
     outline: none;
     background-color: var(--input-bg);
     color: var(--text-main);
+    backdrop-filter: blur(4px);
+    min-width: 0;
 }
 
-.link-input-group input:focus {
-    border-color: var(--accent-color);
-}
-
+.link-input-group input:focus { border-color: var(--accent-color); }
+.link-input-group input::placeholder { color: var(--text-muted); }
 .link-input-group input:first-child { width: 30%; }
 .link-input-group input:nth-child(2) { flex-grow: 1; }
 
 .quick-links-list {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
+    overflow-y: auto;
+    max-height: 100px;
 }
 
 .link-chip {
     background-color: var(--accent-color);
     color: #ffffff;
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 1vw, 0.9rem);
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     transition: all 0.2s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+    white-space: nowrap;
 }
 
 .link-chip:hover {
@@ -325,33 +394,11 @@ body {
 }
 
 /* =========================================
-   7. RESPONSIVE LAYOUT
+   8. THEME TOGGLE BUTTON
    ========================================= */
-@media (max-width: 768px) {
-    .dashboard {
-        grid-template-columns: 1fr;
-    }
-    
-    .clock-time { font-size: 2.8rem; }
-    .timer-display { font-size: 2.8rem; }
-    
-    .link-input-group {
-        flex-direction: column;
-    }
-    .link-input-group input:first-child { width: 100%; }
-}
-
-/* =========================================
-   8. THEME TOGGLE BUTTON (Vanilla CSS)
-   ========================================= */
-.theme-toggle-checkbox {
-    display: none; /* Sembunyikan checkbox asli */
-}
+.theme-toggle-checkbox { display: none; }
 
 .theme-toggle-label {
-    position: fixed;
-    top: 20px;
-    right: 20px;
     width: 60px;
     height: 32px;
     background-color: var(--toggle-bg);
@@ -362,11 +409,11 @@ body {
     justify-content: space-between;
     padding: 0 6px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    z-index: 1000;
-    transition: background-color 0.3s ease;
+    position: relative;
+    transition: background-color 0.4s ease;
+    flex-shrink: 0;
 }
 
-/* Bola di dalam toggle */
 .toggle-ball {
     position: absolute;
     top: 3px;
@@ -375,24 +422,98 @@ body {
     height: 26px;
     background-color: var(--toggle-ball);
     border-radius: 50%;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.4s ease;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* Ikon Matahari & Bulan */
-.icon {
-    font-size: 14px;
-    user-select: none;
-}
-
-/* Posisi ikon */
+.icon { font-size: 14px; user-select: none; z-index: 1; }
 .sun { opacity: 1; transition: opacity 0.3s; }
 .moon { opacity: 0; transition: opacity 0.3s; }
 
-/* ANIMASI SAAT DARK MODE AKTIF */
-body:has(#theme-toggle:checked) .toggle-ball {
-    transform: translateX(28px); /* Geser bola ke kanan */
-}
-
+body:has(#theme-toggle:checked) .toggle-ball { transform: translateX(28px); }
 body:has(#theme-toggle:checked) .sun { opacity: 0; }
 body:has(#theme-toggle:checked) .moon { opacity: 1; }
+
+/* =========================================
+   9. RESPONSIVE LAYOUT (MULTI-DEVICE)
+   ========================================= */
+
+/* --- TABLET (Lebar < 1024px) --- */
+@media (max-width: 1024px) {
+    .dashboard {
+        /* Ubah jadi 2 kolom, tapi Timer & Tasks berdampingan */
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto 1fr auto;
+    }
+    
+    .greeting-card { grid-column: 1 / -1; }
+    .timer-card { grid-column: 1 / 2; }
+    .tasks-card { grid-column: 2 / 3; }
+    .links-card { grid-column: 1 / -1; }
+}
+
+/* --- MOBILE / HP (Lebar < 768px) --- */
+@media (max-width: 768px) {
+    html, body {
+        /* Di HP, kita izinkan scroll vertikal jika konten tidak muat */
+        overflow-y: auto;
+        height: auto;
+        min-height: 100dvh;
+    }
+
+    body {
+        padding: 15px;
+        align-items: flex-start; /* Konten mulai dari atas */
+    }
+
+    .dashboard {
+        /* Ubah jadi 1 kolom penuh */
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        height: auto;
+        max-height: none;
+        gap: 15px;
+    }
+    
+    /* Semua card jadi 1 kolom */
+    .greeting-card,
+    .timer-card,
+    .tasks-card,
+    .links-card {
+        grid-column: 1 / -1;
+    }
+
+    /* Kembalikan scroll internal ke normal di HP */
+    .scrollable-area {
+        overflow-y: visible;
+        max-height: none;
+    }
+    
+    .quick-links-list {
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    /* Penyesuaian font untuk layar kecil */
+    .clock-time { font-size: 2.5rem; }
+    .timer-display { font-size: 3rem; }
+    
+    .dashboard-header {
+        flex-direction: row; /* Tetap sejajar */
+        justify-content: space-between;
+        padding: 0 5px;
+    }
+
+    .link-input-group {
+        flex-direction: column; /* Input link menumpuk di HP */
+    }
+    .link-input-group input:first-child { width: 100%; }
+}
+
+/* --- LAYAR SANGAT KECIL (Lebar < 400px) --- */
+@media (max-width: 400px) {
+    .clock-time { font-size: 2rem; }
+    .timer-display { font-size: 2.5rem; }
+    .btn { padding: 6px 10px; font-size: 0.7rem; }
+    .dashboard-title { font-size: 1rem; }
+}

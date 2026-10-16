@@ -7,15 +7,26 @@
     <title>Document</title>
 </head>
 <body>
-        <!-- TOMBOL GANTI MODE (Vanilla CSS Checkbox Hack) -->
-    <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
-    <label for="theme-toggle" class="theme-toggle-label">
-        <span class="icon sun">☀️</span>
-        <span class="icon moon">🌙</span>
-        <div class="toggle-ball"></div>
-    </label>
+    <!-- Dekorasi Background (Blob) agar efek kaca terlihat -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+
 
     <div class="dashboard">
+
+        <!-- Header Dashboard dengan Tombol Toggle -->
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">To-Do List Life</h1>
+            
+            <!-- TOMBOL GANTI MODE -->
+            <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
+            <label for="theme-toggle" class="theme-toggle-label">
+                <span class="icon sun">☀️</span>
+                <span class="icon moon">🌙</span>
+                <div class="toggle-ball"></div>
+            </label>
+        </div>
         
         <!-- 1. Area Greeting -->
         <div class="card greeting-card glass-panel">
@@ -36,22 +47,33 @@
         </div>
 
         <!-- 3. Tasks (To-Do List) -->
-        <div class="card tasks-card glass-panel">
+        <div class="card tasks-card">
             <h2 class="card-title">Tasks</h2>
             <div class="task-input-group">
                 <input type="text" id="task-input" placeholder="Add a new task...">
                 <button class="btn btn-primary" id="btn-add-task">Add</button>
             </div>
-            <ul class="task-list" id="task-list">
-                <li class="task-item">
-                    <label><input type="checkbox"> belanja</label>
-                    <button class="btn btn-delete">Delete</button>
-                </li>
-                <li class="task-item">
-                    <label><input type="checkbox"> belajar</label>
-                    <button class="btn btn-delete">Delete</button>
-                </li>
-            </ul>
+            <!-- Tambahkan class scrollable-area di sini -->
+            <div class="scrollable-area">
+                <ul class="task-list" id="task-list">
+                    <li class="task-item">
+                        <label><input type="checkbox"> belanja</label>
+                        <button class="btn btn-delete">Delete</button>
+                    </li>
+                    <li class="task-item">
+                        <label><input type="checkbox"> belajar</label>
+                        <button class="btn btn-delete">Delete</button>
+                    </li>
+                    <li class="task-item">
+                        <label><input type="checkbox"> olahraga</label>
+                        <button class="btn btn-delete">Delete</button>
+                    </li>
+                    <li class="task-item">
+                        <label><input type="checkbox"> membaca buku</label>
+                        <button class="btn btn-delete">Delete</button>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!-- 4. Quick Links -->
