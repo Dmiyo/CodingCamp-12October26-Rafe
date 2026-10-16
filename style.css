@@ -1,0 +1,398 @@
+/* =========================================
+   1. KONFIGURASI TEMA (LIGHT MODE DEFAULT)
+   ========================================= */
+:root {
+    /* Warna Background Utama (Bisa gradasi atau warna solid) */
+    --bg-color: #f0f2f5;
+    
+    /* Efek Kaca (Glassmorphism) */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    
+    /* Warna Teks */
+    --text-main: #1a1a1a; 
+    --text-muted: #666666;
+    
+    /* Warna Aksen & Tombol */
+    --accent-color: #6e8efb;
+    --accent-hover: #5a7ae0;
+    --btn-secondary-bg: rgba(0, 0, 0, 0.05);
+    --btn-secondary-hover: rgba(0, 0, 0, 0.1);
+    --btn-delete-bg: #f28b82;
+    
+    /* Input Form */
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --input-border: rgba(0, 0, 0, 0.1);
+
+    /* Warna Toggle */
+    --toggle-bg: #ccc;
+    --toggle-ball: #fff;
+
+}
+
+/* =========================================
+   2. DARK MODE (Otomatis mengikuti sistem)
+   ========================================= */
+/* Ketika checkbox dengan id theme-toggle dicentang, ubah variabelnya */
+#theme-toggle:checked ~ .dashboard,
+#theme-toggle:checked ~ * { 
+    /* Catatan: Kita menggunakan trik sibling selector. 
+       Karena checkbox ada di luar .dashboard, kita bisa langsung menimpa :root */
+}
+
+/* Cara paling bersih: Menggunakan :has() pada body (Didukung browser modern) */
+body:has(#theme-toggle:checked) {
+    --bg-color: #121212;
+    --glass-bg: rgba(30, 30, 30, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --text-main: #f5f5f5;
+    --text-muted: #aaaaaa;
+    --btn-secondary-bg: rgba(255, 255, 255, 0.1);
+    --btn-secondary-hover: rgba(255, 255, 255, 0.2);
+    --input-bg: rgba(0, 0, 0, 0.3);
+    --input-border: rgba(255, 255, 255, 0.15);
+    --toggle-bg: #6e8efb;
+    --toggle-ball: #121212;
+}
+
+/* =========================================
+   3. RESET & GLOBAL STYLES
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: var(--text-main);
+    
+    /* Opsional: Menambahkan sedikit pola gradasi di background */
+    background-image: radial-gradient(circle at 10% 20%, rgba(110, 142, 251, 0.15) 0%, transparent 40%),
+                      radial-gradient(circle at 90% 80%, rgba(167, 119, 227, 0.15) 0%, transparent 40%);
+}
+
+/* =========================================
+   4. LAYOUT DASHBOARD
+   ========================================= */
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* =========================================
+   5. GLASSMORPHISM CARD STYLES
+   ========================================= */
+.card {
+    padding: 24px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Kelas khusus untuk efek kaca */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px); /* Efek blur utama */
+    -webkit-backdrop-filter: blur(12px); /* Untuk Safari */
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+}
+
+/* =========================================
+   6. KOMPONEN DALAM CARD
+   ========================================= */
+
+/* --- Greeting Area --- */
+.greeting-card {
+    grid-column: 1 / -1;
+    align-items: center;
+    text-align: center;
+}
+
+.clock-time {
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: var(--accent-color);
+    margin-bottom: 8px;
+}
+
+.clock-date {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.greeting-text {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* --- Titles --- */
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: center;
+    color: var(--text-main);
+}
+
+/* --- Focus Timer --- */
+.timer-card {
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-display {
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 10px;
+}
+
+/* --- Tombol (Buttons) --- */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: #ffffff;
+}
+.btn-primary:hover { 
+    background-color: var(--accent-hover); 
+    transform: scale(1.02);
+}
+
+.btn-secondary {
+    background-color: var(--btn-secondary-bg);
+    color: var(--text-main);
+}
+.btn-secondary:hover { 
+    background-color: var(--btn-secondary-hover); 
+}
+
+.btn-delete {
+    background-color: var(--btn-delete-bg);
+    color: #ffffff;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+.btn-delete:hover { 
+    opacity: 0.8; 
+}
+
+/* --- Tasks (To-Do List) --- */
+.tasks-card {
+    justify-content: flex-start;
+}
+
+.task-input-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.task-input-group input {
+    flex-grow: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    background-color: var(--input-bg);
+    color: var(--text-main);
+}
+
+.task-input-group input:focus {
+    border-color: var(--accent-color);
+}
+
+.task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.task-item label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: var(--text-main);
+}
+
+.task-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--accent-color);
+}
+
+/* --- Quick Links --- */
+.links-card {
+    grid-column: 1 / -1;
+}
+
+.link-input-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.link-input-group input {
+    padding: 10px 14px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    background-color: var(--input-bg);
+    color: var(--text-main);
+}
+
+.link-input-group input:focus {
+    border-color: var(--accent-color);
+}
+
+.link-input-group input:first-child { width: 30%; }
+.link-input-group input:nth-child(2) { flex-grow: 1; }
+
+.quick-links-list {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.link-chip {
+    background-color: var(--accent-color);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.link-chip:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(110, 142, 251, 0.4);
+}
+
+/* =========================================
+   7. RESPONSIVE LAYOUT
+   ========================================= */
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+    
+    .clock-time { font-size: 2.8rem; }
+    .timer-display { font-size: 2.8rem; }
+    
+    .link-input-group {
+        flex-direction: column;
+    }
+    .link-input-group input:first-child { width: 100%; }
+}
+
+/* =========================================
+   8. THEME TOGGLE BUTTON (Vanilla CSS)
+   ========================================= */
+.theme-toggle-checkbox {
+    display: none; /* Sembunyikan checkbox asli */
+}
+
+.theme-toggle-label {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 32px;
+    background-color: var(--toggle-bg);
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+/* Bola di dalam toggle */
+.toggle-ball {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 26px;
+    height: 26px;
+    background-color: var(--toggle-ball);
+    border-radius: 50%;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Ikon Matahari & Bulan */
+.icon {
+    font-size: 14px;
+    user-select: none;
+}
+
+/* Posisi ikon */
+.sun { opacity: 1; transition: opacity 0.3s; }
+.moon { opacity: 0; transition: opacity 0.3s; }
+
+/* ANIMASI SAAT DARK MODE AKTIF */
+body:has(#theme-toggle:checked) .toggle-ball {
+    transform: translateX(28px); /* Geser bola ke kanan */
+}
+
+body:has(#theme-toggle:checked) .sun { opacity: 0; }
+body:has(#theme-toggle:checked) .moon { opacity: 1; }
