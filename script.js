@@ -48,7 +48,7 @@ function updateClock() {
 
 function initGreeting() {
     updateGreeting();
-    setInterval(updateGreeting, 60000); // Update tiap menit
+    setInterval(updateGreeting, 60000); 
 }
 
 function updateGreeting() {
@@ -76,7 +76,7 @@ function updateGreeting() {
 // =========================================
 
 let timerInterval = null;
-let timerSeconds = 25 * 60; // 25 menit
+let timerSeconds = 25 * 60; 
 let timerRunning = false;
 
 function initTimer() {
@@ -86,15 +86,9 @@ function initTimer() {
 
     updateTimerDisplay();
 
-    if (startBtn) {
-        startBtn.addEventListener('click', startTimer);
-    }
-    if (stopBtn) {
-        stopBtn.addEventListener('click', stopTimer);
-    }
-    if (resetBtn) {
-        resetBtn.addEventListener('click', resetTimer);
-    }
+    if (startBtn) startBtn.addEventListener('click', startTimer);
+    if (stopBtn) stopBtn.addEventListener('click', stopTimer);
+    if (resetBtn) resetBtn.addEventListener('click', resetTimer);
 }
 
 function startTimer() {
@@ -160,7 +154,7 @@ function playNotificationSound() {
 }
 
 // =========================================
-// 4. TASKS (TO-DO LIST)
+// 4. TASKS (TO-DO LIST) & SORTING
 // =========================================
 
 function initTasks() {
@@ -168,22 +162,52 @@ function initTasks() {
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('task-list');
 
+    // 1. Suntikkan Dropdown Sort secara dinamis lewat JS (HTML tetap bersih)
+    injectSortDropdown();
+
     if (addBtn) {
         addBtn.addEventListener('click', addTask);
     }
 
     if (taskInput) {
         taskInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                addTask();
-            }
+            if (e.key === 'Enter') addTask();
         });
     }
 
-    // Pasang event listener ke task yang sudah ada di HTML
     if (taskList) {
         attachTaskEvents(taskList);
     }
+}
+
+// Fungsi untuk membuat elemen <select> sort secara dinamis
+function injectSortDropdown() {
+    const tasksCard = document.querySelector('.tasks-card');
+    const taskInputGroup = document.querySelector('.task-input-group');
+    
+    if (!tasksCard || !taskInputGroup) return;
+    // Cegah duplikasi jika fungsi terpanggil 2x
+    if (document.getElementById('sort-tasks')) return;
+
+    const sortContainer = document.createElement('div');
+    sortContainer.style.cssText = 'margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;';
+    
+    sortContainer.innerHTML = `
+        <label for="sort-tasks" style="font-size: 0.85rem; color: var(--text-muted);">Urutkan:</label>
+        <select id="sort-tasks" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-main); outline: none; backdrop-filter: blur(4px); font-size: 0.85rem; cursor: pointer;">
+            <option value="default">Waktu Dibuat</option>
+            <option value="alpha-asc">Nama (A-Z)</option>
+            <option value="alpha-desc">Nama (Z-A)</option>
+        </select>
+    `;
+
+    // Sisipkan setelah input group, sebelum list
+    taskInputGroup.parentNode.insertBefore(sortContainer, taskInputGroup.nextSibling);
+
+    // Event listener untuk sort
+    document.getElementById('sort-tasks').addEventListener('change', function() {
+        sortTasks(this.value);
+    });
 }
 
 function addTask() {
@@ -195,6 +219,21 @@ function addTask() {
     const text = taskInput.value.trim();
     if (text === '') return;
 
+    // --- LOGIKA MENCEGAH DUPLIKAT (Pakai Alert) ---
+    const existingTasks = Array.from(taskList.querySelectorAll('.task-item label'));
+    const isDuplicate = existingTasks.some(label => {
+        // Bersihkan teks dari spasi berlebih dan jadikan lowercase untuk perbandingan
+        const taskText = label.textContent.trim().toLowerCase();
+        return taskText === text.toLowerCase();
+    });
+    
+    if (isDuplicate) {
+        showCustomAlert('Tugas "' + text + '" sudah ada di dalam daftar!');
+        taskInput.value = ''; 
+        return; 
+    }
+    // ----------------------------------------------
+
     const li = document.createElement('li');
     li.className = 'task-item';
     li.innerHTML = `
@@ -204,6 +243,13 @@ function addTask() {
 
     taskList.appendChild(li);
     attachTaskEvents(taskList);
+    
+    // Terapkan ulang sorting jika user sedang menggunakan filter sort tertentu
+    const currentSort = document.getElementById('sort-tasks').value;
+    if (currentSort !== 'default') {
+        sortTasks(currentSort);
+    }
+
     taskInput.value = '';
     taskInput.focus();
 }
@@ -223,6 +269,12 @@ function attachTaskEvents(taskList) {
                 label.style.textDecoration = 'none';
                 label.style.opacity = '1';
             }
+            
+            // Jika sort by status aktif, urutkan ulang saat status berubah
+            const currentSort = document.getElementById('sort-tasks').value;
+            if (currentSort === 'status') {
+                sortTasks(currentSort);
+            }
         });
     });
 
@@ -233,11 +285,38 @@ function attachTaskEvents(taskList) {
 
         btn.addEventListener('click', function () {
             const item = this.closest('.task-item');
-            if (item) {
-                item.remove();
-            }
+            if (item) item.remove();
         });
     });
+}
+
+function sortTasks(criteria) {
+    const taskList = document.getElementById('task-list');
+    if (!taskList) return;
+
+    const tasks = Array.from(taskList.querySelectorAll('.task-item'));
+
+    tasks.sort((a, b) => {
+        const textA = a.querySelector('label').textContent.trim().toLowerCase();
+        const textB = b.querySelector('label').textContent.trim().toLowerCase();
+        const checkedA = a.querySelector('input[type="checkbox"]').checked;
+        const checkedB = b.querySelector('input[type="checkbox"]').checked;
+
+        if (criteria === 'alpha-asc') {
+            return textA.localeCompare(textB);
+        } else if (criteria === 'alpha-desc') {
+            return textB.localeCompare(textA);
+        } else if (criteria === 'status') {
+            if (checkedA !== checkedB) {
+                return checkedA ? 1 : -1;
+            }
+            return textA.localeCompare(textB); 
+        } else {
+            return 0; 
+        }
+    });
+
+    tasks.forEach(task => taskList.appendChild(task));
 }
 
 function escapeHtml(text) {
@@ -255,15 +334,10 @@ function initQuickLinks() {
     const nameInput = document.getElementById('link-name');
     const urlInput = document.getElementById('link-url');
 
-    if (addBtn) {
-        addBtn.addEventListener('click', addQuickLink);
-    }
-
+    if (addBtn) addBtn.addEventListener('click', addQuickLink);
     if (urlInput) {
         urlInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                addQuickLink();
-            }
+            if (e.key === 'Enter') addQuickLink();
         });
     }
 }
@@ -280,7 +354,6 @@ function addQuickLink() {
 
     if (name === '' || url === '') return;
 
-    // Tambahkan https:// jika belum ada
     if (!/^https?:\/\//i.test(url)) {
         url = 'https://' + url;
     }
@@ -307,18 +380,59 @@ function initThemeToggle() {
     const toggle = document.getElementById('theme-toggle');
     if (!toggle) return;
 
-    // Cek preferensi tersimpan
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        toggle.checked = true;
+    if (savedTheme === 'dark') toggle.checked = true;
+
+    toggle.addEventListener('change', function () {
+        localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+    });
+}
+
+// =========================================
+// 7. CUSTOM ALERT MODAL (PENGGANTI ALERT BAWAAN)
+// =========================================
+
+function showCustomAlert(message) {
+    // Cek jika pop-up sudah ada untuk mencegah duplikasi
+    let overlay = document.getElementById('custom-alert-overlay');
+    
+    // Jika belum ada, buat elemen HTML-nya secara dinamis
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'custom-alert-overlay';
+        overlay.className = 'custom-modal-overlay';
+        overlay.innerHTML = `
+            <div class="custom-modal-box">
+                <div class="custom-modal-icon">⚠️</div>
+                <div class="custom-modal-text" id="custom-alert-message"></div>
+                <button class="custom-modal-btn" id="custom-alert-btn">Mengerti</button>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        // Tambahkan event listener untuk tombol tutup
+        document.getElementById('custom-alert-btn').addEventListener('click', closeCustomAlert);
+        
+        // Tutup pop-up jika area overlay (luar kotak) di-klik
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeCustomAlert();
+            }
+        });
     }
 
-    // Simpan preferensi saat toggle berubah
-    toggle.addEventListener('change', function () {
-        if (this.checked) {
-            localStorage.setItem('theme', 'dark');
-        } else {
-            localStorage.setItem('theme', 'light');
-        }
-    });
+    // Set pesan
+    document.getElementById('custom-alert-message').textContent = message;
+
+    // Tampilkan dengan sedikit delay agar transisi CSS berjalan
+    setTimeout(() => {
+        overlay.classList.add('show');
+    }, 10);
+}
+
+function closeCustomAlert() {
+    const overlay = document.getElementById('custom-alert-overlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+    }
 }
