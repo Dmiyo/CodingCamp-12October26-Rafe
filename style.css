@@ -514,7 +514,70 @@ body:has(#theme-toggle:checked) .moon { opacity: 1; }
 }
 
 /* =========================================
-   10. RESPONSIVE LAYOUT (MULTI-DEVICE)
+   10. HEADER CONTROLS & USER PROFILE
+   ========================================= */
+
+/* Container untuk menyejajarkan tombol, profil, dan toggle */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Styling untuk nama user */
+.user-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-right: 5px;
+}
+
+/* Container profil user */
+.user-profile {
+    display: flex;
+    align-items: center;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 4px 6px 4px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+/* Utility untuk menyembunyikan elemen */
+.hidden {
+    display: none !important;
+}
+
+/* Tombol Close (X) di Modal */
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s, transform 0.2s;
+}
+
+.modal-close-btn:hover {
+    color: var(--text-main);
+    transform: scale(1.1);
+}
+
+/* Memastikan overlay yang tersembunyi benar-benar tidak menghalangi klik */
+.custom-modal-overlay {
+    pointer-events: none;
+}
+
+/* Hanya aktifkan klik jika pop-up sedang tampil */
+.custom-modal-overlay.show {
+    pointer-events: auto;
+}
+
+/* =========================================
+   11. RESPONSIVE LAYOUT (MULTI-DEVICE)
    ========================================= */
 
 /* --- TABLET (Lebar < 1024px) --- */

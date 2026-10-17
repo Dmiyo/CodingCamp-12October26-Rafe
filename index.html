@@ -19,12 +19,28 @@
             <h1 class="dashboard-title">To-Do List Life</h1>
             
             <!-- TOMBOL GANTI MODE -->
-            <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
-            <label for="theme-toggle" class="theme-toggle-label">
-                <span class="icon sun">☀️</span>
-                <span class="icon moon">🌙</span>
-                <div class="toggle-ball"></div>
-            </label>
+            <div class="header-controls">
+                <!-- Tombol Login (Hanya muncul jika belum login) -->
+                <button id="header-login-btn" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85rem;" onclick="openAuthModal('login')">
+                    Log In
+                </button>
+
+                <!-- Info User & Tombol Logout (Hanya muncul jika sudah login) -->
+                <div id="user-profile" class="user-profile hidden">
+                    <span id="user-name-display" class="user-name">User</span>
+                    <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;" onclick="handleLogout()">
+                        Log Out
+                    </button>
+                </div>
+
+                <!-- Toggle Tema -->
+                <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
+                <label for="theme-toggle" class="theme-toggle-label">
+                    <span class="icon sun">☀️</span>
+                    <span class="icon moon">🌙</span>
+                    <div class="toggle-ball"></div>
+                </label>
+            </div>
         </div>
         
         <!-- 1. Area Greeting -->
@@ -55,22 +71,6 @@
             <!-- Tambahkan class scrollable-area di sini -->
             <div class="scrollable-area">
                 <ul class="task-list" id="task-list">
-                    <li class="task-item">
-                        <label><input type="checkbox"> belanja</label>
-                        <button class="btn btn-delete">Delete</button>
-                    </li>
-                    <li class="task-item">
-                        <label><input type="checkbox"> belajar</label>
-                        <button class="btn btn-delete">Delete</button>
-                    </li>
-                    <li class="task-item">
-                        <label><input type="checkbox"> olahraga</label>
-                        <button class="btn btn-delete">Delete</button>
-                    </li>
-                    <li class="task-item">
-                        <label><input type="checkbox"> membaca buku</label>
-                        <button class="btn btn-delete">Delete</button>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -84,9 +84,6 @@
                 <button class="btn btn-primary" id="btn-add-link">Add Link</button>
             </div>
             <div class="quick-links-list" id="quick-links-list">
-                <a href="#" class="link-chip">🌐 Google</a>
-                <a href="#" class="link-chip">✉️ Gmail</a>
-                <a href="#" class="link-chip">📅 Calendar</a>
             </div>
         </div>
     </div>
